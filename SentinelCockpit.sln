@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentinelCockpit.Engine", "src\SentinelCockpit.Engine\SentinelCockpit.Engine.csproj", "{1E881E21-965D-4B09-A87C-C2FB78F7658C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{58E38465-CE5F-4420-9F47-1A6278FA36A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D5D791F4-BE47-4BEA-B81A-EF7BBD3FFD25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentinelCockpit.Engine.UnitTests", "tests\SentinelCockpit.Engine.UnitTests\SentinelCockpit.Engine.UnitTests.csproj", "{929D90E0-FF58-4ABD-A479-4E05687EE623}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentinelCockpit.Portal", "src\SentinelCockpit.Portal\SentinelCockpit.Portal.csproj", "{03DFBD94-9EAB-47F8-B214-BB19B8D32600}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentinelCockpit.Engine.Models", "src\SentinelCockpit.Engine.Models\SentinelCockpit.Engine.Models.csproj", "{B202A8C4-7905-445F-AD71-0E8D1A71CEE9}"
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "SentinelCockpit.Deployment", "src\SentinelCockpit.Deployment\SentinelCockpit.Deployment.deployproj", "{86BC22A2-2882-48DC-B3D0-6BC79349685F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E881E21-965D-4B09-A87C-C2FB78F7658C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E881E21-965D-4B09-A87C-C2FB78F7658C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E881E21-965D-4B09-A87C-C2FB78F7658C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E881E21-965D-4B09-A87C-C2FB78F7658C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929D90E0-FF58-4ABD-A479-4E05687EE623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929D90E0-FF58-4ABD-A479-4E05687EE623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929D90E0-FF58-4ABD-A479-4E05687EE623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929D90E0-FF58-4ABD-A479-4E05687EE623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03DFBD94-9EAB-47F8-B214-BB19B8D32600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03DFBD94-9EAB-47F8-B214-BB19B8D32600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03DFBD94-9EAB-47F8-B214-BB19B8D32600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03DFBD94-9EAB-47F8-B214-BB19B8D32600}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B202A8C4-7905-445F-AD71-0E8D1A71CEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B202A8C4-7905-445F-AD71-0E8D1A71CEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B202A8C4-7905-445F-AD71-0E8D1A71CEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B202A8C4-7905-445F-AD71-0E8D1A71CEE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86BC22A2-2882-48DC-B3D0-6BC79349685F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86BC22A2-2882-48DC-B3D0-6BC79349685F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86BC22A2-2882-48DC-B3D0-6BC79349685F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86BC22A2-2882-48DC-B3D0-6BC79349685F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1E881E21-965D-4B09-A87C-C2FB78F7658C} = {58E38465-CE5F-4420-9F47-1A6278FA36A7}
+		{929D90E0-FF58-4ABD-A479-4E05687EE623} = {D5D791F4-BE47-4BEA-B81A-EF7BBD3FFD25}
+		{03DFBD94-9EAB-47F8-B214-BB19B8D32600} = {58E38465-CE5F-4420-9F47-1A6278FA36A7}
+		{B202A8C4-7905-445F-AD71-0E8D1A71CEE9} = {58E38465-CE5F-4420-9F47-1A6278FA36A7}
+		{86BC22A2-2882-48DC-B3D0-6BC79349685F} = {58E38465-CE5F-4420-9F47-1A6278FA36A7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28BF56C8-4029-4856-9CE6-1C53FC644964}
+	EndGlobalSection
+EndGlobal

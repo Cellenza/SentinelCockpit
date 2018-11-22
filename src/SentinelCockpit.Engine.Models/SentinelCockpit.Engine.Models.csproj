@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>Cellenza</Company>
+    <Product>SentinelCockpit</Product>
+    <Copyright>Copyright 2018 Cellenza</Copyright>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Cellenza/SentinelCockpit/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Cellenza/SentinelCockpit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cellenza/SentinelCockpit.git</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>

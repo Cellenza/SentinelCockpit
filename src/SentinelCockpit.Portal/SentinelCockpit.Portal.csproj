@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Copyright>Copyright 2018 Cellenza</Copyright>
+    <Product>SentinelCockpit</Product>
+    <Company>Cellenza</Company>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Cellenza/SentinelCockpit/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Cellenza/SentinelCockpit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cellenza/SentinelCockpit.git</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <RepositoryUrl>https://github.com/Cellenza/SentinelCockpit.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Cellenza/SentinelCockpit</PackageProjectUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Cellenza/SentinelCockpit/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Copyright 2018 Cellenza</Copyright>
+    <Product>SentinelCockpit</Product>
+    <Company>Cellenza</Company>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="IPNetwork2" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Azure.EventGrid" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Azure.Management.AppService.Fluent" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Azure.Management.ResourceManager.Fluent" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Azure.Management.Storage.Fluent" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventGrid" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.1" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.24" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SentinelCockpit.Engine.Models\SentinelCockpit.Engine.Models.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>

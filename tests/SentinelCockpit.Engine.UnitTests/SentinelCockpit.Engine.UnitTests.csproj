@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Cellenza/SentinelCockpit/master/LICENSE</PackageLicenseUrl>
+
+    <PackageProjectUrl>https://github.com/Cellenza/SentinelCockpit</PackageProjectUrl>
+
+    <RepositoryType>Git</RepositoryType>
+
+    <RepositoryUrl>https://github.com/Cellenza/SentinelCockpit.git</RepositoryUrl>
+
+    <Copyright>Copyright 2018 Cellenza</Copyright>
+
+    <Company>Cellenza</Company>
+
+    <Product>SentinelCockpit</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SentinelCockpit.Engine\SentinelCockpit.Engine.csproj" />
+  </ItemGroup>
+
+</Project>

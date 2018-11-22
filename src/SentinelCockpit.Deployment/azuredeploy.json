@@ -1,0 +1,108 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "resourceSuffixWithHyphen": "[concat('-sentinelcockpit-', uniqueString(resourceGroup().name))]",
+    "resourceSuffixWithoutHyphen": "[replace(variables('resourceSuffixWithHyphen'), '-', '')]",
+    "serviceBusName": "[concat('events', variables('resourceSuffixWithHyphen'))]",
+    "eventsTopicName": "[concat(variables('serviceBusName'), '/', 'update-resources')]",
+    "historyQueueName": "[concat(variables('serviceBusName'), '/', 'updated-resources')]",
+    "storageName": "[concat('data', variables('resourceSuffixWithoutHyphen'))]",
+    "servicePlanName": "[concat('asp', variables('resourceSuffixWithHyphen'))]",
+    "engineFunctionName": "[concat('engine', variables('resourceSuffixWithHyphen'))]",
+    "appInsightsName": "[concat('insights', variables('resourceSuffixWithHyphen'))]"
+  },
+  "resources": [
+    {
+      "name": "[variables('serviceBusName')]",
+      "type": "Microsoft.ServiceBus/namespaces",
+      "apiVersion": "2017-04-01",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard"
+      },
+      "properties": {},
+      "resources": [
+        {
+          "name": "[variables('eventsTopicName')]",
+          "type": "Microsoft.ServiceBus/namespaces/topics",
+          "apiVersion": "2017-04-01",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[variables('serviceBusName')]"
+          ],
+          "properties": {
+            "maxSizeInMegabytes": 1024,
+            "enableBatchedOperations": true,
+            "enablePartitioning": true,
+            "enableExpress": true
+          }
+        },
+        {
+          "name": "[variables('historyQueueName')]",
+          "type": "Microsoft.ServiceBus/namespaces/queues",
+          "apiVersion": "2017-04-01",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[variables('serviceBusName')]"
+          ],
+          "properties": {
+            "maxSizeInMegabytes": 1024,
+            "deadLetteringOnMessageExpiration": true,
+            "enableBatchedOperations": true,
+            "enablePartitioning": true,
+            "enableExpress": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "[variables('appInsightsName')]",
+      "type": "microsoft.insights/components",
+      "apiVersion": "2015-05-01",
+      "location": "[variables('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web"
+      }
+    },
+    {
+      "name": "[variables('servicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2016-09-01",
+      "location": "[variables('location')]",
+      "kind": "functionapp",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic",
+        "size": "Y1",
+        "family": "Y",
+        "capacity": 0
+      },
+      "properties": {
+        "name": "[variables('servicePlanName')]"
+      }
+    },
+    {
+      "name": "[variables('engineFunctionName')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2016-08-01",
+      "location": "[variables('location')]",
+      "kind": "functionapp",
+      "dependsOn": [
+        "[variables('appInsightsName')]",
+        "[variables('servicePlanName')]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]"
+      }
+
+    }
+  ],
+  "outputs": {}
+}
