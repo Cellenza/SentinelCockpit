@@ -14,16 +14,24 @@
 //  You should have received a copy of the GNU General Public License
 //  along with SentinelCockpit. If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Threading.Tasks;
+using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
 using Xunit;
 
 namespace SentinelCockpit.Engine.UnitTests
 {
-    public class UnitTest1
+    public class EngineFunctionsUnitTests
     {
         [Fact]
-        public void Test1()
+        public async Task EngineFunctions_ResourceCreatedAsync_EventTypeNotEqualToResourceWriteSuccessEvent_ShouldReturnNull()
         {
+            EngineFunctions engine = new EngineFunctions(null);
+            EventGridEvent eventGridEvent = new EventGridEvent(string.Empty, string.Empty, null, EventTypes.ContainerRegistryImageDeletedEvent, DateTime.Now, "2.0", "topic");
 
+            EventGridEvent message = await engine.ResourceCreatedAsync(eventGridEvent, null);
+            Assert.Null(message);
         }
     }
 }

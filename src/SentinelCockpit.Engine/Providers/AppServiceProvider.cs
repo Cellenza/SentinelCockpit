@@ -2,9 +2,12 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Management.AppService.Fluent;
 using Microsoft.Azure.Management.AppService.Fluent.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
+using Newtonsoft.Json.Linq;
 using SentinelCockpit.Engine.Models;
 using SentinelCockpit.Engine.Services;
 
@@ -17,30 +20,29 @@ namespace SentinelCockpit.Engine.Providers
         }
 
         [FunctionName("ApplyProfileOnWebApps")]
-        [return: ServiceBus("%HISTORY-QUEUE%", Connection = "CONNECTIONSTRING_SERVICEBUS")]
-        public async Task<Models.Resource> ApplyFirewallOnWebAppsAsync(
-            [ServiceBusTrigger("%EVENTS-TOPIC%", "webapps", Connection = "CONNECTIONSTRING_SERVICEBUS")] Models.Resource appService,
+        public async Task<EventGridEvent> ApplyFirewallOnWebAppsAsync(
+            [EventGridTrigger] EventGridEvent eventGridEvent,
             [Blob("/%PROFILE-CONTAINER%/{profile}.json", FileAccess.Read, Connection = "CONNECTIONSTRING_PROFILEBLOBS")] Models.FirewallRules profile)
         {
-            if (appService == null || profile == null) return null;
-
-            return await ApplyProfileOnAppServiceAsync<IWebApp>(appService, profile);
+            if (eventGridEvent == null || profile == null) return null;
+            return await ApplyProfileOnAppServiceAsync<IWebApp>(eventGridEvent, profile);
         }
 
         [FunctionName("ApplyProfileOnFunctionsApps")]
-        [return: ServiceBus("%HISTORY-QUEUE%", Connection = "CONNECTIONSTRING_SERVICEBUS")]
-        public async Task<Models.Resource> ApplyFirewallOnFunctionsAsync(
-            [ServiceBusTrigger("%EVENTS-TOPIC%", "functions", Connection = "CONNECTIONSTRING_SERVICEBUS")] Models.Resource appService,
+        public async Task<EventGridEvent> ApplyFirewallOnFunctionsAsync(
+            [EventGridTrigger] EventGridEvent eventGridEvent,
             [Blob("/%PROFILE-CONTAINER%/{profile}.json", FileAccess.Read, Connection = "CONNECTIONSTRING_PROFILEBLOBS")] Models.FirewallRules profile)
         {
-            if (appService == null || profile == null) return null;
+            if (eventGridEvent == null || profile == null) return null;
 
-            return await ApplyProfileOnAppServiceAsync<IFunctionApp>(appService, profile);
+            return await ApplyProfileOnAppServiceAsync<IFunctionApp>(eventGridEvent, profile);
         }
 
-        private async Task<Models.Resource> ApplyProfileOnAppServiceAsync<T>(Models.Resource appService, Models.FirewallRules profile)
+        private async Task<EventGridEvent> ApplyProfileOnAppServiceAsync<T>(EventGridEvent eventGridEvent, Models.FirewallRules profile)
             where T : IWebAppBase
         {
+
+            Models.Resource appService = ((JObject) eventGridEvent.Data).ToObject<Models.Resource>();
             var client = AppServiceManager.Authenticate(this.credentialsProvider.Credentials, appService.SubscriptionId);
             bool isFunction = typeof(T) == typeof(IFunctionApp);
             T app;
@@ -79,7 +81,7 @@ namespace SentinelCockpit.Engine.Providers
                 ProfileVersion = profile.Version
             };
 
-            return securedResource;
+            return new EventGridEvent(Guid.NewGuid().ToString(), securedResource.Id, securedResource, "SecuredResource", securedResource.LastUpdate.DateTime, "1.0");
         }
     }
 }

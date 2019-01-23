@@ -3,7 +3,7 @@ using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using SentinelCockpit.Engine.Services;
 
-[assembly:WebJobsStartup(typeof(SentinelCockpit.Engine.EngineStartup))]
+[assembly: WebJobsStartup(typeof(SentinelCockpit.Engine.EngineStartup))]
 namespace SentinelCockpit.Engine
 {
     public class EngineStartup : IWebJobsStartup

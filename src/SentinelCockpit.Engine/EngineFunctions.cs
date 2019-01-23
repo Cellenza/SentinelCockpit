@@ -14,19 +14,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with SentinelCockpit. If not, see <https://www.gnu.org/licenses/>.
 
-using System.Text;
+using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
-using Microsoft.Azure.WebJobs.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SentinelCockpit.Engine.Models;
 using SentinelCockpit.Engine.Services;
 
@@ -45,8 +43,8 @@ namespace SentinelCockpit.Engine
         }
 
         [FunctionName("ResourceCreated")]
-        [return: ServiceBus("%EVENTS-TOPIC%", Connection = "CONNECTIONSTRING_SERVICEBUS", EntityType = EntityType.Topic)]
-        public async Task<Message> ResourceCreatedAsync(
+        [return: EventGrid(TopicEndpointUri = "SENTINELCOCKPIT-TOPIC-URI", TopicKeySetting = "SENTINELCOCKPIT-TOPIC-KEYSETTING")]
+        public async Task<EventGridEvent> ResourceCreatedAsync(
             [EventGridTrigger] EventGridEvent eventGridEvent,
             ILogger log)
         {
@@ -56,7 +54,7 @@ namespace SentinelCockpit.Engine
                 return null;
             }
 
-            Message message = null;
+            EventGridEvent message = null;
             string resourceId = eventGridEvent.Subject;
             string subscriptionId = ResourceUtils.SubscriptionFromResourceId(resourceId);
             var azure = ResourceManager.Configure().Authenticate(credentialsProvider.Credentials).WithSubscription(subscriptionId);
@@ -80,10 +78,7 @@ namespace SentinelCockpit.Engine
                     Type = ResourceUtils.ResourceTypeFromResourceId(resourceId)
                 };
 
-                string json = JsonConvert.SerializeObject(data, Formatting.None);
-                message = new Message(Encoding.UTF8.GetBytes(json));
-                message.UserProperties.Add("provider", data.Provider);
-                message.UserProperties.Add("type", data.Type);
+                message = new EventGridEvent(Guid.NewGuid().ToString(), data.Id, data, "ApplyFirewallProfile", eventGridEvent.EventTime, "1.0");
             }
 
             return message;
@@ -92,15 +87,16 @@ namespace SentinelCockpit.Engine
 
         [FunctionName("StoreHistory")]
         public async Task StoreHistoryAsync(
-            [ServiceBusTrigger("%HISTORY-QUEUE%", Connection = "CONNECTIONSTRING_SERVICEBUS")] Models.SecuredResource resource,
+            [EventGridTrigger] EventGridEvent eventGridEvent,
             [Table("%HISTORY-TABLE%", Connection = "CONNECTIONSTRING_HISTORYTABLE")] CloudTable historyTable,
             ILogger log)
         {
-            if (resource == null)
+            if (eventGridEvent == null || eventGridEvent.Data == null)
             {
                 return;
             }
 
+            Models.SecuredResource resource = ((JObject) eventGridEvent.Data).ToObject<Models.SecuredResource>();
             var entity = new TableEntityAdapter<SecuredResource>(resource, resource.SubscriptionId, resource.Id)
             {
                 Timestamp = resource.LastUpdate

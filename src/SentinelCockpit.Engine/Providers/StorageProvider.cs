@@ -17,11 +17,12 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
+using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.Management.Storage.Fluent;
 using Microsoft.Azure.Management.Storage.Fluent.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
+using Newtonsoft.Json.Linq;
 using SentinelCockpit.Engine.Models;
 using SentinelCockpit.Engine.Services;
 using Action = Microsoft.Azure.Management.Storage.Fluent.Models.Action;
@@ -35,13 +36,13 @@ namespace SentinelCockpit.Engine.Providers
         }
 
         [FunctionName("ApplyProfileOnStorage")]
-        [return: ServiceBus("%HISTORY-QUEUE%", Connection = "CONNECTIONSTRING_SERVICEBUS")]
-        public async Task<Models.Resource> ApplyFirewallOnStorageAsync(
-            [ServiceBusTrigger("%EVENTS-TOPIC%", "storage", Connection = "CONNECTIONSTRING_SERVICEBUS")] Models.Resource storage,
+        public async Task<EventGridEvent> ApplyFirewallOnStorageAsync(
+            [EventGridTrigger] EventGridEvent eventGridEvent,
             [Blob("/%PROFILE-CONTAINER%/{profile}.json", FileAccess.Read, Connection = "CONNECTIONSTRING_PROFILEBLOBS")] Models.FirewallRules profile)
         {
-            if (storage == null || profile == null) return null;
+            if (eventGridEvent == null || profile == null) return null;
 
+            var storage = ((JObject) eventGridEvent.Data).ToObject<Models.Resource>();
             var client = StorageManager.Authenticate(this.credentialsProvider.Credentials, storage.SubscriptionId);
             var storageAccount = await client.StorageAccounts.GetByIdAsync(storage.Id);
 
@@ -65,7 +66,7 @@ namespace SentinelCockpit.Engine.Providers
                 ProfileVersion = profile.Version
             };
 
-            return securedResource;
+            return new EventGridEvent(Guid.NewGuid().ToString(), securedResource.Id, securedResource, "SecuredResource", securedResource.LastUpdate.DateTime, "1.0");
         }
     }
 }
